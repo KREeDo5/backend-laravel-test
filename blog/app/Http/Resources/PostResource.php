@@ -7,6 +7,19 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * Сериализация публикации для API-ответов.
+ *
+ * @OA\Schema(
+ *     schema="Post",
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="title", type="string", example="Заголовок публикации"),
+ *     @OA\Property(property="body", type="string", example="Текст публикации"),
+ *     @OA\Property(property="author", type="object", nullable=true,
+ *         description="Автор; присутствует, если загружена связь",
+ *         @OA\Property(property="id", type="integer", example=1),
+ *         @OA\Property(property="name", type="string", example="Иван Петров"),
+ *     ),
+ *     @OA\Property(property="created_at", type="string", format="date-time", example="2026-09-21T12:00:00+00:00"),
+ * )
  */
 class PostResource extends JsonResource
 {
@@ -21,7 +34,6 @@ class PostResource extends JsonResource
                 'name' => $this->author->name,
             ]),
             'created_at' => $this->created_at->toIso8601String(),
-            'updated_at' => $this->updated_at->toIso8601String(),
         ];
     }
 }

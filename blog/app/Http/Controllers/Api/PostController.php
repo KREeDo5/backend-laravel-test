@@ -20,7 +20,32 @@ class PostController extends Controller
     ) {
     }
 
-    /** POST /api/posts — создание публикации. */
+    /**
+     * @OA\Post(
+     *     path="/api/posts",
+     *     tags={"Posts"},
+     *     summary="Создание публикации",
+     *     security={{"bearerAuth": {}}},
+     *
+     *     @OA\RequestBody(required=true,
+     *         @OA\JsonContent(
+     *             required={"title", "text"},
+     *             @OA\Property(property="title", type="string", maxLength=255, example="Новая публикация"),
+     *             @OA\Property(property="text", type="string", example="Текст публикации"),
+     *         ),
+     *     ),
+     *
+     *     @OA\Response(response=201, description="Публикация создана",
+     *         @OA\JsonContent(ref="#/components/schemas/PostResponse"),
+     *     ),
+     *     @OA\Response(response=401, description="Не авторизован (нет Bearer-токена)",
+     *         @OA\JsonContent(ref="#/components/schemas/ErrorResponse"),
+     *     ),
+     *     @OA\Response(response=422, description="Ошибка валидации",
+     *         @OA\JsonContent(ref="#/components/schemas/ErrorResponse"),
+     *     ),
+     * )
+     */
     public function create(PostRequest $request): JsonResponse
     {
         $post = $this->createPostService->create(
@@ -33,7 +58,33 @@ class PostController extends Controller
             ->setStatusCode(201);
     }
 
-    /** GET /api/posts — список публикаций (порционно, с фильтрами и сортировкой). */
+    /**
+     * @OA\Get(
+     *     path="/api/posts",
+     *     tags={"Posts"},
+     *     summary="Лента публикаций",
+     *
+     *     @OA\Parameter(name="limit", in="query", required=false,
+     *         @OA\Schema(type="integer", minimum=1, maximum=20, example=10),
+     *     ),
+     *     @OA\Parameter(name="offset", in="query", required=false,
+     *         @OA\Schema(type="integer", minimum=0, example=0),
+     *     ),
+     *     @OA\Parameter(name="sort", in="query", required=false,
+     *         @OA\Schema(type="string", enum={"title_asc", "title_desc", "date_asc", "date_desc"}, example="date_desc"),
+     *     ),
+     *     @OA\Parameter(name="date_from", in="query", required=false,
+     *         @OA\Schema(type="string", format="date", example="2026-01-01"),
+     *     ),
+     *     @OA\Parameter(name="date_to", in="query", required=false,
+     *         @OA\Schema(type="string", format="date", example="2026-12-31"),
+     *     ),
+     *
+     *     @OA\Response(response=200, description="Порция публикаций",
+     *         @OA\JsonContent(ref="#/components/schemas/PostListResponse"),
+     *     ),
+     * )
+     */
     public function index(ListPostsRequest $request): AnonymousResourceCollection
     {
         $posts = $this->listPostsService->list($request->validated());
@@ -41,7 +92,37 @@ class PostController extends Controller
         return PostResource::collection($posts);
     }
 
-    /** GET /api/my-posts — лента публикаций текущего пользователя. */
+    /**
+     * @OA\Get(
+     *     path="/api/my-posts",
+     *     tags={"Posts"},
+     *     summary="Публикации текущего пользователя",
+     *     security={{"bearerAuth": {}}},
+     *
+     *     @OA\Parameter(name="limit", in="query", required=false,
+     *         @OA\Schema(type="integer", minimum=1, maximum=20, example=10),
+     *     ),
+     *     @OA\Parameter(name="offset", in="query", required=false,
+     *         @OA\Schema(type="integer", minimum=0, example=0),
+     *     ),
+     *     @OA\Parameter(name="sort", in="query", required=false,
+     *         @OA\Schema(type="string", enum={"title_asc", "title_desc", "date_asc", "date_desc"}, example="date_desc"),
+     *     ),
+     *     @OA\Parameter(name="date_from", in="query", required=false,
+     *         @OA\Schema(type="string", format="date", example="2026-01-01"),
+     *     ),
+     *     @OA\Parameter(name="date_to", in="query", required=false,
+     *         @OA\Schema(type="string", format="date", example="2026-12-31"),
+     *     ),
+     *
+     *     @OA\Response(response=200, description="Порция публикаций пользователя",
+     *         @OA\JsonContent(ref="#/components/schemas/PostListResponse"),
+     *     ),
+     *     @OA\Response(response=401, description="Не авторизован (нет Bearer-токена)",
+     *         @OA\JsonContent(ref="#/components/schemas/ErrorResponse"),
+     *     ),
+     * )
+     */
     public function myPosts(ListPostsRequest $request): AnonymousResourceCollection
     {
         $posts = $this->listPostsService->list(
