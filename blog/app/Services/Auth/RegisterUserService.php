@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Actions\Auth;
+namespace App\Services\Auth;
 
 use App\Exceptions\ApiException;
 use App\Models\User;
 use Illuminate\Database\UniqueConstraintViolationException;
 
-class RegisterUserAction
+class RegisterUserService
 {
-    public function execute(array $data): array
+    public function create(array $data): array
     {
         try {
             $user = User::create($data);

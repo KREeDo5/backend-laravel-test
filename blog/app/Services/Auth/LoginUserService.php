@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Actions\Auth;
+namespace App\Services\Auth;
 
 use App\Exceptions\ApiException;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class LoginUserAction
+class LoginUserService
 {
-    public function execute(array $data): array
+    public function login(array $data): array
     {
         $user = User::where('email', $data['email'])->first();
 

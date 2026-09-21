@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\Auth\LoginUserAction;
-use App\Actions\Auth\RegisterUserAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Services\Auth\LoginUserService;
+use App\Services\Auth\RegisterUserService;
 use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
     public function __construct(
-        private readonly RegisterUserAction $registerUser,
-        private readonly LoginUserAction $loginUser,
+        private readonly RegisterUserService $registerUserService,
+        private readonly LoginUserService $loginUserService,
     ) {
     }
 
     public function register(RegisterRequest $request): JsonResponse
     {
         return response()->json(
-            $this->registerUser->execute($request->validated()),
+            $this->registerUserService->create($request->validated()),
             201,
         );
     }
@@ -28,7 +28,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request): JsonResponse
     {
         return response()->json(
-            $this->loginUser->execute($request->validated()),
+            $this->loginUserService->login($request->validated()),
             200,
         );
     }

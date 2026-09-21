@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\Posts;
+namespace App\Services\Posts;
 
 use App\Enums\PostSort;
 use App\Models\Post;
@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
-class ListPostsAction
+class ListPostsService
 {
     /** Сортировка по умолчанию: новые посты - первые */
     private const DEFAULT_SORT = PostSort::DateDesc;
@@ -21,7 +21,7 @@ class ListPostsAction
         PostSort::DateDesc->value => ['column' => 'created_at', 'direction' => 'desc'],
     ];
 
-    public function execute(array $filters, ?User $author = null): Collection
+    public function list(array $filters, ?User $author = null): Collection
     {
         $sort = $this->resolveSort($filters);
 
