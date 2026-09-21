@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\EmailRegex;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,7 +25,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email'],
+            'email' => ['required', new EmailRegex],
             'password' => ['required', 'string'],
         ];
     }
@@ -41,7 +42,6 @@ class LoginRequest extends FormRequest
     {
         return [
             'email.required' => 'Требуется указать email.',
-            'email.email' => 'Указан некорректный email.',
             'password.required' => 'Требуется указать пароль.',
         ];
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\EmailRegex;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -25,7 +26,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'max:255', 'unique:users', new EmailRegex],
             'password' => ['required', 'string', 'min:4'],
         ];
     }
@@ -47,7 +48,6 @@ class RegisterRequest extends FormRequest
             'name.string' => 'Имя должно быть строкой.',
             'name.max' => 'Имя не должно превышать :max символов.',
             'email.required' => 'Требуется указать email.',
-            'email.email' => 'Указан некорректный email.',
             'email.max' => 'Email не должен превышать :max символов.',
             'email.unique' => 'Пользователь с указанным email уже зарегистрирован.',
             'password.required' => 'Требуется указать пароль.',
