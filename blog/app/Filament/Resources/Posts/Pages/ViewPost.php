@@ -10,6 +10,11 @@ class ViewPost extends ViewRecord
 {
     protected static string $resource = PostResource::class;
 
+    public function getTitle(): string
+    {
+        return 'Публикация: ' . $this->getRecord()->title;
+    }
+
     protected function getHeaderActions(): array
     {
         return [
