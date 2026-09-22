@@ -18,7 +18,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         @OA\Property(property="id", type="integer", example=1),
  *         @OA\Property(property="name", type="string", example="Иван Петров"),
  *     ),
- *     @OA\Property(property="created_at", type="string", format="date-time", example="2026-09-21T12:00:00+00:00"),
+     *     @OA\Property(property="created_at", type="integer", example=1789000000),
  * )
  */
 class PostResource extends JsonResource
@@ -33,7 +33,7 @@ class PostResource extends JsonResource
                 'id' => $this->author->id,
                 'name' => $this->author->name,
             ]),
-            'created_at' => $this->created_at->toIso8601String(),
+            'created_at' => $this->created_at->getTimestamp(),
         ];
     }
 }

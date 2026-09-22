@@ -14,7 +14,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *     @OA\Property(property="name", type="string", example="Иван Петров"),
  *     @OA\Property(property="email", type="string", format="email", example="ivan@petrov.ru"),
  *     @OA\Property(property="is_admin", type="boolean", example=false),
- *     @OA\Property(property="created_at", type="string", format="date-time", example="2026-09-21T12:00:00+00:00"),
+     *     @OA\Property(property="created_at", type="integer", example=1789000000),
  * )
  */
 class UserResource extends JsonResource
@@ -26,7 +26,7 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'is_admin' => $this->is_admin,
-            'created_at' => $this->created_at->toIso8601String(),
+            'created_at' => $this->created_at->getTimestamp(),
         ];
     }
 }
