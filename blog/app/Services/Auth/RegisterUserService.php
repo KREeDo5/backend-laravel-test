@@ -2,7 +2,7 @@
 
 namespace App\Services\Auth;
 
-use App\DTO\Auth\RegisterDTO;
+use App\Http\Api\Dto\Auth\RegisterDto;
 use App\Exceptions\ApiException;
 use App\Models\User;
 use Illuminate\Database\UniqueConstraintViolationException;
@@ -11,7 +11,7 @@ use Throwable;
 
 class RegisterUserService
 {
-    public function create(RegisterDTO $dto): array
+    public function create(RegisterDto $dto): array
     {
         try {
             return DB::transaction(function () use ($dto): array {

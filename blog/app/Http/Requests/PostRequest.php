@@ -2,12 +2,11 @@
 
 namespace App\Http\Requests;
 
-use App\DTO\Contracts\HasDTO;
-use App\DTO\Posts\CreatePostDTO;
+use App\Http\Api\Dto\Contracts\HasDTO;
+use App\Http\Api\Dto\Posts\CreatePostDto;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
 
-class PostRequest extends FormRequest implements HasDTO
+class PostRequest extends ApiRequest implements HasDTO
 {
     /**
      * Get the validation rules that apply to the request.
@@ -42,13 +41,8 @@ class PostRequest extends FormRequest implements HasDTO
         ];
     }
 
-    public function toDTO(): CreatePostDTO
+    public function toDTO(): CreatePostDto
     {
-        $data = $this->validated();
-
-        return new CreatePostDTO(
-            title: $data['title'],
-            text: $data['text'],
-        );
+        return CreatePostDto::fromArray($this->validated());
     }
 }

@@ -2,13 +2,12 @@
 
 namespace App\Http\Requests;
 
-use App\DTO\Auth\LoginDTO;
-use App\DTO\Contracts\HasDTO;
+use App\Http\Api\Dto\Auth\LoginDto;
+use App\Http\Api\Dto\Contracts\HasDTO;
 use App\Rules\EmailRegex;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
 
-class LoginRequest extends FormRequest implements HasDTO
+class LoginRequest extends ApiRequest implements HasDTO
 {
 
     /**
@@ -40,13 +39,8 @@ class LoginRequest extends FormRequest implements HasDTO
         ];
     }
 
-    public function toDTO(): LoginDTO
+    public function toDTO(): LoginDto
     {
-        $data = $this->validated();
-
-        return new LoginDTO(
-            email: $data['email'],
-            password: $data['password'],
-        );
+        return LoginDto::fromArray($this->validated());
     }
 }

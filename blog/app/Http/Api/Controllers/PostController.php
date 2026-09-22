@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Api\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\ListPostsRequest;
 use App\Http\Requests\PostRequest;
 use App\Http\Resources\PostResource;
@@ -10,7 +9,6 @@ use App\Services\Posts\CreatePostService;
 use App\Services\Posts\ListPostsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Request;
 
 class PostController extends Controller
 {

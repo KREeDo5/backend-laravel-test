@@ -2,14 +2,13 @@
 
 namespace App\Http\Requests;
 
-use App\DTO\Contracts\HasDTO;
-use App\DTO\Posts\ListPostsDTO;
 use App\Enums\PostSort;
+use App\Http\Api\Dto\Contracts\HasDTO;
+use App\Http\Api\Dto\Posts\ListPostsDto;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ListPostsRequest extends FormRequest implements HasDTO
+class ListPostsRequest extends ApiListRequest implements HasDTO
 {
     /**
      * Get the validation rules that apply to the request.
@@ -19,8 +18,6 @@ class ListPostsRequest extends FormRequest implements HasDTO
     public function rules(): array
     {
         return [
-            'limit' => ['sometimes', 'integer', 'min:1', 'max:20'],
-            'offset' => ['sometimes', 'integer', 'min:0'],
             'sort' => ['sometimes', Rule::enum(PostSort::class)],
             'date_from' => ['sometimes', 'date'],
             'date_to' => ['sometimes', 'date', 'after_or_equal:date_from'],
@@ -53,14 +50,13 @@ class ListPostsRequest extends FormRequest implements HasDTO
         ];
     }
 
-    public function toDTO(): ListPostsDTO
+    public function toDTO(): ListPostsDto
     {
         $data = $this->validated();
 
-        return new ListPostsDTO(
-            limit: isset($data['limit']) ? (int) $data['limit'] : null,
-            offset: isset($data['offset']) ? (int) $data['offset'] : null,
-            sort: isset($data['sort']) ? PostSort::from($data['sort']) : ListPostsDTO::DEFAULT_SORT,
+        return new ListPostsDto(
+            list: $this->toBaseDto(),
+            sort: isset($data['sort']) ? PostSort::from($data['sort']) : ListPostsDto::DEFAULT_SORT,
             dateFrom: $data['date_from'] ?? null,
             dateTo: $data['date_to'] ?? null,
         );

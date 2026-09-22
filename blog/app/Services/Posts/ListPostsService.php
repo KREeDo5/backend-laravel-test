@@ -2,7 +2,7 @@
 
 namespace App\Services\Posts;
 
-use App\DTO\Posts\ListPostsDTO;
+use App\Http\Api\Dto\Posts\ListPostsDto;
 use App\Enums\PostSort;
 use App\Models\Post;
 use App\Models\User;
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ListPostsService
 {
-    public function list(ListPostsDTO $dto, ?User $author = null): Collection
+    public function list(ListPostsDto $dto, ?User $author = null): Collection
     {
         $postQuery = Post::query()
             ->with('author:id,name');
@@ -26,7 +26,7 @@ class ListPostsService
         return $postQuery->get();
     }
 
-    private function applyFilters(Builder $postQuery, ListPostsDTO $dto, ?User $author): void
+    private function applyFilters(Builder $postQuery, ListPostsDto $dto, ?User $author): void
     {
         $this->applyUser($postQuery, $author);
         $this->applyDates($postQuery, $dto);
@@ -38,7 +38,7 @@ class ListPostsService
         $postQuery->when($author !== null, fn (Builder $query) => $query->where(['author_id' => $author->id]));
     }
 
-    private function applyDates(Builder $postQuery, ListPostsDTO $dto): void
+    private function applyDates(Builder $postQuery, ListPostsDto $dto): void
     {
         $postQuery
             ->when($dto->dateFrom !== null, fn (Builder $query) => $query->where('created_at', '>=', Carbon::parse($dto->dateFrom)->startOfDay()))
@@ -58,13 +58,13 @@ class ListPostsService
         $query->orderBy($column, $direction);
     }
 
-    private function applyPagination(Builder $postQuery, ListPostsDTO $dto): void
+    private function applyPagination(Builder $postQuery, ListPostsDto $dto): void
     {
-        if ($dto->limit !== null) {
-            $postQuery->limit($dto->limit);
+        if ($dto->list->limit !== null) {
+            $postQuery->limit($dto->list->limit);
         }
-        if ($dto->offset !== null) {
-            $postQuery->offset($dto->offset);
+        if ($dto->list->offset !== null) {
+            $postQuery->offset($dto->list->offset);
         }
     }
 }

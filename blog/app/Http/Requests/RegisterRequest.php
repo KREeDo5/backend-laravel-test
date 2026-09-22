@@ -2,13 +2,12 @@
 
 namespace App\Http\Requests;
 
-use App\DTO\Auth\RegisterDTO;
-use App\DTO\Contracts\HasDTO;
+use App\Http\Api\Dto\Auth\RegisterDto;
+use App\Http\Api\Dto\Contracts\HasDTO;
 use App\Rules\EmailRegex;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterRequest extends FormRequest implements HasDTO
+class RegisterRequest extends ApiRequest implements HasDTO
 {
     /**
      * Get the validation rules that apply to the request.
@@ -49,14 +48,8 @@ class RegisterRequest extends FormRequest implements HasDTO
         ];
     }
 
-    public function toDTO(): RegisterDTO
+    public function toDTO(): RegisterDto
     {
-        $data = $this->validated();
-
-        return new RegisterDTO(
-            name: $data['name'],
-            email: $data['email'],
-            password: $data['password'],
-        );
+        return RegisterDto::fromArray($this->validated());
     }
 }

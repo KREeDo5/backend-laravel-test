@@ -2,7 +2,7 @@
 
 namespace App\Services\Auth;
 
-use App\DTO\Auth\LoginDTO;
+use App\Http\Api\Dto\Auth\LoginDto;
 use App\Exceptions\ApiException;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -14,7 +14,7 @@ class LoginUserService
      */
     private const DUMMY_HASH = '$2y$12$VUk/UGH6yKjPM6i2QsQuTuKeaWkTHMKR8LiABinrltDcwG7m9/S3G';
 
-    public function login(LoginDTO $dto): array
+    public function login(LoginDto $dto): array
     {
         $user = User::where('email', $dto->email)->first();
 

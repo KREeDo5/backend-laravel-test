@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTO\Contracts;
+namespace App\Http\Api\Dto\Contracts;
 
 interface HasDTO
 {
