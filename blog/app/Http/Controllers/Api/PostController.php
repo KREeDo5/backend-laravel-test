@@ -31,7 +31,7 @@ class PostController extends Controller
      *         @OA\JsonContent(
      *             required={"title", "text"},
      *             @OA\Property(property="title", type="string", maxLength=255, example="Новая публикация"),
-     *             @OA\Property(property="text", type="string", example="Текст публикации"),
+     *             @OA\Property(property="text", type="string", maxLength=16383, example="Текст публикации"),
      *         ),
      *     ),
      *

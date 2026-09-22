@@ -25,7 +25,9 @@ class PostRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255'],
-            'text' => ['required', 'string'],
+            // Ограничение длины (16383) связано с весом символов, 
+            // которые могут занимать до 4 байт. (65535/4=16383,75)
+            'text' => ['required', 'string', 'max:16383'],
         ];
     }
 
@@ -43,6 +45,7 @@ class PostRequest extends FormRequest
             'title.required' => 'Требуется указать название публикации.',
             'title.max' => 'Название публикации не должно превышать :max символов.',
             'text.required' => 'Требуется указать текст публикации.',
+            'text.max' => 'Текст публикации не должен превышать :max символов.',
         ];
     }
 }
