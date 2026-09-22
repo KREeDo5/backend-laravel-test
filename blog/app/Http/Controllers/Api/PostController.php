@@ -50,7 +50,7 @@ class PostController extends Controller
     {
         $post = $this->createPostService->create(
             $request->user(),
-            $request->validated(),
+            $request->toDTO(),
         );
 
         return (new PostResource($post->load('author:id,name')))
@@ -87,7 +87,7 @@ class PostController extends Controller
      */
     public function index(ListPostsRequest $request): AnonymousResourceCollection
     {
-        $posts = $this->listPostsService->list($request->validated());
+        $posts = $this->listPostsService->list($request->toDTO());
 
         return PostResource::collection($posts);
     }
@@ -126,7 +126,7 @@ class PostController extends Controller
     public function myPosts(ListPostsRequest $request): AnonymousResourceCollection
     {
         $posts = $this->listPostsService->list(
-            $request->validated(),
+            $request->toDTO(),
             $request->user(),
         );
 

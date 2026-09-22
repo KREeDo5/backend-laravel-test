@@ -2,19 +2,20 @@
 
 namespace App\Services\Posts;
 
+use App\DTO\Posts\CreatePostDTO;
 use App\Models\Post;
 use App\Models\User;
 
 class CreatePostService
 {
 
-    public function create(User $author, array $data): Post
+    public function create(User $author, CreatePostDTO $dto): Post
     {
         return Post::create([
             // Id автора — берётся по токену доступа
             'author_id' => $author->id,
-            'title' => $data['title'],
-            'body' => $data['text'],
+            'title' => $dto->title,
+            'body' => $dto->text,
         ]);
     }
 }

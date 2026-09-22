@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use App\DTO\Auth\RegisterDTO;
 use App\Exceptions\ApiException;
 use App\Models\User;
 use Illuminate\Database\UniqueConstraintViolationException;
@@ -10,11 +11,15 @@ use Throwable;
 
 class RegisterUserService
 {
-    public function create(array $data): array
+    public function create(RegisterDTO $dto): array
     {
         try {
-            return DB::transaction(function () use ($data): array {
-                $user = User::create($data);
+            return DB::transaction(function () use ($dto): array {
+                $user = User::create([
+                    'name' => $dto->name,
+                    'email' => $dto->email,
+                    'password' => $dto->password,
+                ]);
 
                 return ['user' => $user, 'accessToken' => $user->generateToken()];
             });

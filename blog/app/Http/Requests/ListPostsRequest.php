@@ -2,22 +2,15 @@
 
 namespace App\Http\Requests;
 
+use App\DTO\Contracts\HasDTO;
+use App\DTO\Posts\ListPostsDTO;
 use App\Enums\PostSort;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ListPostsRequest extends FormRequest
+class ListPostsRequest extends FormRequest implements HasDTO
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        // Права проверяет middleware
-        return true;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -58,5 +51,18 @@ class ListPostsRequest extends FormRequest
             'date_to.date' => 'Дата до (фильтрация) указана в неверном формате.',
             'date_to.after_or_equal' => 'Дата до (фильтрация) должна быть не раньше даты от.',
         ];
+    }
+
+    public function toDTO(): ListPostsDTO
+    {
+        $data = $this->validated();
+
+        return new ListPostsDTO(
+            limit: isset($data['limit']) ? (int) $data['limit'] : null,
+            offset: isset($data['offset']) ? (int) $data['offset'] : null,
+            sort: isset($data['sort']) ? PostSort::from($data['sort']) : ListPostsDTO::DEFAULT_SORT,
+            dateFrom: $data['date_from'] ?? null,
+            dateTo: $data['date_to'] ?? null,
+        );
     }
 }

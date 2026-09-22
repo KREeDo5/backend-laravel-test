@@ -2,21 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\DTO\Auth\RegisterDTO;
+use App\DTO\Contracts\HasDTO;
 use App\Rules\EmailRegex;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterRequest extends FormRequest
+class RegisterRequest extends FormRequest implements HasDTO
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        // Регистрация доступна для всех
-        return true;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -54,5 +47,16 @@ class RegisterRequest extends FormRequest
             'password.string' => 'Пароль должен быть строкой.',
             'password.min' => 'Пароль должен содержать не менее :min символов.',
         ];
+    }
+
+    public function toDTO(): RegisterDTO
+    {
+        $data = $this->validated();
+
+        return new RegisterDTO(
+            name: $data['name'],
+            email: $data['email'],
+            password: $data['password'],
+        );
     }
 }

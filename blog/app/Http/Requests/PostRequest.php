@@ -2,20 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\DTO\Contracts\HasDTO;
+use App\DTO\Posts\CreatePostDTO;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class PostRequest extends FormRequest
+class PostRequest extends FormRequest implements HasDTO
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        // Права проверяет middleware
-        return true;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -47,5 +40,15 @@ class PostRequest extends FormRequest
             'text.required' => 'Требуется указать текст публикации.',
             'text.max' => 'Текст публикации не должен превышать :max символов.',
         ];
+    }
+
+    public function toDTO(): CreatePostDTO
+    {
+        $data = $this->validated();
+
+        return new CreatePostDTO(
+            title: $data['title'],
+            text: $data['text'],
+        );
     }
 }

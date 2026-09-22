@@ -2,20 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\DTO\Auth\LoginDTO;
+use App\DTO\Contracts\HasDTO;
 use App\Rules\EmailRegex;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class LoginRequest extends FormRequest
+class LoginRequest extends FormRequest implements HasDTO
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-         // Авторизация доступна для всех
-        return true;
-    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -44,5 +38,15 @@ class LoginRequest extends FormRequest
             'email.required' => 'Требуется указать email.',
             'password.required' => 'Требуется указать пароль.',
         ];
+    }
+
+    public function toDTO(): LoginDTO
+    {
+        $data = $this->validated();
+
+        return new LoginDTO(
+            email: $data['email'],
+            password: $data['password'],
+        );
     }
 }

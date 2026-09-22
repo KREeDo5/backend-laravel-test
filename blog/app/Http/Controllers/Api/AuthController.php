@@ -43,7 +43,7 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request): JsonResponse
     {
-        $result = $this->registerUserService->create($request->validated());
+        $result = $this->registerUserService->create($request->toDTO());
 
         return response()->json([
             'user' => new UserResource($result['user']),
@@ -78,7 +78,7 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        $result = $this->loginUserService->login($request->validated());
+        $result = $this->loginUserService->login($request->toDTO());
 
         return response()->json([
             'user' => new UserResource($result['user']),
