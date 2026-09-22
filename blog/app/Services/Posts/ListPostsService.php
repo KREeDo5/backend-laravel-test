@@ -14,13 +14,6 @@ class ListPostsService
     /** Сортировка по умолчанию: новые посты - первые */
     private const DEFAULT_SORT = PostSort::DateDesc;
 
-    private const SORT_COLUMNS = [
-        PostSort::TitleAsc->value => ['column' => 'title', 'direction' => 'asc'],
-        PostSort::TitleDesc->value => ['column' => 'title', 'direction' => 'desc'],
-        PostSort::DateAsc->value => ['column' => 'created_at', 'direction' => 'asc'],
-        PostSort::DateDesc->value => ['column' => 'created_at', 'direction' => 'desc'],
-    ];
-
     public function list(array $filters, ?User $author = null): Collection
     {
         $sort = $this->resolveSort($filters);
@@ -65,9 +58,15 @@ class ListPostsService
 
      private function applySort(Builder $query, PostSort $sort): void
     {
-        $mapping = self::SORT_COLUMNS[$sort->value];
+        [$column, $direction] = match ($sort) {
+            PostSort::TitleAsc => ['title', 'asc'],
+            PostSort::TitleDesc => ['title', 'desc'],
+            PostSort::DateAsc => ['created_at', 'asc'],
+            PostSort::DateDesc => ['created_at', 'desc'],
+            default => ['created_at', 'desc'],
+        };
 
-        $query->orderBy($mapping['column'], $mapping['direction']);
+        $query->orderBy($column, $direction);
     }
 
     private function applyPagination(Builder $postQuery, array $filters): void
